@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript" src = "D:\网页实验\sucai6-master\js\animate.js"></script>
+	<style type="text/css">
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		.head{
+   			width:100%;
+   			height:40px;
+   			background-color:#ccc;
+        }
+        .head>img{
+    	 	position: absolute;
+    	 	left: 220px;
+    	 	top: 15px;
+    	}
+    	.text{
+    		width: 800px;
+    		height: 30px ;
+    		margin: 0px auto;
+    		border: 2px;
+    		position: relative; 
+    		overflow: hidden;
+    	}
+    	.head p{
+    		font-size:10px;
+    		color: red;
+    		line-height:40px;
+    		position: absolute;
+    		left: 800px;
+    	}
+		ul,li{
+			list-style: none;
+		}
+		.box{
+			width: 1200px;
+			height: 382px;
+			border: 1px solid red;
+			margin: 0px auto;
+			position: relative;
+			overflow: hidden;
+		}
+		.slider{
+			width: 8400px;
+			position: absolute;
+			left: -1200px;
+		}
+		.slide{
+			width: 1200px;
+			overflow: hidden;
+			float: left;
+		}
+		.box>span{
+			display: block;
+			width: 30px;
+			height: 50px;
+			text-align: center;
+			cursor: pointer;
+			color: white;
+			top: 175px;
+			line-height: 50px;
+			background: rgb(255, 0, 0);
+			font-size: 30px;
+			position: absolute;
+			opacity: 0;
+		}
+		#left{
+			left: 30px;
+		}
+		#right{
+			right: 30px;
+		}
+		.nav{
+			position: absolute;
+			left: 500px;
+			bottom: 20px;
+		}
+		.nav>li{
+			float: left;
+			padding-left: 6px;
+    		padding-right: 6px;
+			text-align: center;
+			list-style: none;
+			display: inline;
+			background-color: #ccc;
+			cursor: pointer;
+			margin: 0 10px;
+			border-radius: 50%; 
+		}
+		.nav .active{
+			background-color: red;
+			color: white;
+		}
+	</style>
+</head>
+<body>
+	<div class = "head">
+		<img src="D:\网页实验\sucai6-master\images\a15.png">
+		<div class = "text">
+		<p id = "p">[温馨提示！]最近有不少在网上骗人，请大家注意！！！</p>
+		</div>
+	</div>
+	<div class = "box" id = "box">
+		<div class = "slider" id = "slider">
+			<div class = "slide"><img src = "D:\网页实验\sucai6-master\images\b5.png" alt = ""></div>
+			<div class = "slide"><img src = "D:\网页实验\sucai6-master\images\b1.png" alt = ""></div>
+			<div class = "slide"><img src = "D:\网页实验\sucai6-master\images\b2.png" alt = ""></div>
+			<div class = "slide"><img src = "D:\网页实验\sucai6-master\images\b3.png" alt = ""></div>
+			<div class = "slide"><img src = "D:\网页实验\sucai6-master\images\b4.png" alt = ""></div>
+			<div class = "slide"><img src = "D:\网页实验\sucai6-master\images\b5.png" alt = ""></div>
+			<div class = "slide"><img src = "D:\网页实验\sucai6-master\images\b1.png" alt = ""></div>
+		</div>
+	<span id = "left"></span>
+	<span id = "right"></span>
+	<ul class = "nav" id = "nav">
+		<li class = "active">1</li>
+		<li>2</li>
+		<li>3</li>
+		<li>4</li>
+		<li>5</li>
+	</ul>
+</div>
+<script type="text/javascript">
+	var box = document.getElementById('box');
+	var oNavlist = document.getElementById('nav').children;
+	var slider = document.getElementById('slider');
+	var left = document.getElementById('left');
+	var right = document.getElementById('right');
+	var p = document.getElementById("p");
+	var index = 1;
+	var timer;
+	var isMoving = false;
+	box.onmouseover = function(){
+		animate(left,{opacity:50})
+		animate(right,{opacity:50})
+		clearInterval(timer)
+	}
+	box.onmouseout = function(){
+		animate(left,{opacity:0})
+		animate(right,{opacity:0})
+		timer = setInterval(next,3000);
+	}
+	right.onclick = next;
+	left.onclick = prev;
+	for(var i = 0;i < oNavlist.length;i++){
+		oNavlist[i].idx = i;
+		oNavlist[i].onclick = function(){
+			index = this.idx + 1;
+			navmove();
+			animate(slider,{left: -1200 * index	
+			});
+		}
+	}
+	var i = 800;
+	setInterval(function(){
+		p.style.left = i + "px";
+		i--;
+		if(i < -230){
+			i = 800;
+		}
+	},15);
+	function next(){
+		if(isMoving){
+			return;
+		}
+		isMoving = true;
+		index ++;
+		navmove();
+		animate(slider,{left:-1200 * index},function(){
+			if(index === 6){
+				slider.style.left = '-1200px';
+				index = 1;
+			}
+			isMoving = false;
+		});
+	}
+	function prev(){
+		if(isMoving){
+			return;
+		}
+		isMoving = true;
+		index --;
+		navmove();
+		animate(slider,{left: -1200 * index},function(){
+			if(index === 0){
+				slider.style.left = '-6000px';
+				index = 5;
+			}
+			isMoving = false;
+		});
+	}
+	function navmove(){
+		for(var i = 0; i < oNavlist.length;i++){
+			oNavlist[i].className = "";
+		}
+		if(index === 6){
+			oNavlist[0].className = "active";
+		}
+		else if(index === 0){
+			oNavlist[4].className = "active";
+		}
+		else{
+			oNavlist[index - 1].className = "active";
+		}
+	}
+	timer = setInterval(next,3000);
+</script>
+</body>
+</html>
